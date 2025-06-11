@@ -28,10 +28,17 @@ last_two_days = [values for key, values in daily_stocks.items() if key ==
                  yesterday or key == day_before_yesterday]
 print(last_two_days)
 
+<<<<<<< HEAD
 yesterday_closing_stock_price = float(last_two_days[0]['4. close'])
 
 
 day_before_yesterday_closing_price = float(last_two_days[1]['4. close'])
+=======
+yesterday_closing_stock_price = last_two_days[0]['4. close']
+
+
+day_before_yesterday_closing_price = last_two_days[1]['4. close']
+>>>>>>> a1de553c75ec3906b6813c6e5daab571922e147d
 
 difference = yesterday_closing_stock_price - day_before_yesterday_closing_price
 
