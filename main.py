@@ -17,7 +17,6 @@ stock_response.raise_for_status()
 
 daily_stocks = stock_response.json()['Time Series (Daily)']
 
-# print(daily_stocks)
 
 # use datetime and timedelta to get yesterday and the day before yesterday
 yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
@@ -29,10 +28,10 @@ last_two_days = [values for key, values in daily_stocks.items() if key ==
                  yesterday or key == day_before_yesterday]
 print(last_two_days)
 
-yesterday_closing_stock_price = last_two_days[0]['close']
+yesterday_closing_stock_price = last_two_days[0]['4. close']
 
 
-day_before_yesterday_closing_price = last_two_days[1]['close']
+day_before_yesterday_closing_price = last_two_days[1]['4. close']
 
 difference = yesterday_closing_stock_price - day_before_yesterday_closing_price
 
