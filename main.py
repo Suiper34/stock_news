@@ -26,22 +26,25 @@ day_before_yesterday = (
 # append last two days in list
 last_two_days = [values for key, values in daily_stocks.items() if key ==
                  yesterday or key == day_before_yesterday]
-print(last_two_days)
 
-<<<<<<< HEAD
+
 yesterday_closing_stock_price = float(last_two_days[0]['4. close'])
 
-
 day_before_yesterday_closing_price = float(last_two_days[1]['4. close'])
-=======
-yesterday_closing_stock_price = last_two_days[0]['4. close']
-
-
-day_before_yesterday_closing_price = last_two_days[1]['4. close']
->>>>>>> a1de553c75ec3906b6813c6e5daab571922e147d
 
 difference = yesterday_closing_stock_price - day_before_yesterday_closing_price
 
 # increase by 5 % or more / decrease by 5 % or more
 if difference >= (5/100 * day_before_yesterday_closing_price) or (day_before_yesterday_closing_price+difference) <= (95/100 * day_before_yesterday_closing_price):
-    print("get new update")
+
+    news_api = requests.get(
+        url="https://newsdata.io/api/1/latest?apikey=pub_43d9cf6dbb9545f591061ec4cd8789e8&q=tesla%20inc")
+    news_api.raise_for_status()
+    # slicing to lastest 3 updates
+    last_3_news = news_api.json()['results'][:3]
+
+    # rearranging the news data as dict with title, link and description
+    lastest_3 = [{'title': i['title'], 'link': i['link'],
+                  'description': i['description']} for i in last_3_news]
+
+    print(lastest_3)
