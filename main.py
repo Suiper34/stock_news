@@ -1,9 +1,13 @@
 import os
+import smtplib
 from datetime import datetime, timedelta
+from email.message import EmailMessage
 
 import requests
+import twilio
 
 symbol = "TSLA"
+company = "Tesla Inc"
 
 parameters = {
     "function": "TIME_SERIES_DAILY",
@@ -47,4 +51,14 @@ if difference >= (5/100 * day_before_yesterday_closing_price) or (day_before_yes
     lastest_3 = [{'title': i['title'], 'link': i['link'],
                   'description': i['description']} for i in last_3_news]
 
-    print(lastest_3)
+    with smtplib.SMTP_SSL("smtp.gmail.com") as mail_connection:
+        mail_connection.login(
+            user=os.environ.get("email"), password=os.environ.get("password"))
+        for news in lastest_3:
+            email = EmailMessage()
+            email['Subject'] = f"{company} Stock Update"
+            email['From'] = os.environ.get("email")
+            email['To'] = os.environ.get("receiver")
+            email.set_content(
+                f"Title: {news['title']}\nLink: {news['link']}\nDescription: {news['description']}")
+            mail_connection.send_message(email)
