@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from email.message import EmailMessage
 
 import requests
-import twilio
+from twilio.rest import Client
 
 symbol = "TSLA"
 company = "Tesla Inc"
@@ -53,7 +53,7 @@ if difference >= (5/100 * day_before_yesterday_closing_price) or (day_before_yes
 
     with smtplib.SMTP_SSL("smtp.gmail.com") as mail_connection:
         mail_connection.login(
-            user=os.environ.get("email"), password=os.environ.get("password"))
+            user=os.environ.get("email"), password=os.environ.get("passwordd"))
         for news in lastest_3:
             email = EmailMessage()
             email['Subject'] = f"{company} Stock Update"
@@ -62,3 +62,16 @@ if difference >= (5/100 * day_before_yesterday_closing_price) or (day_before_yes
             email.set_content(
                 f"Title: {news['title']}\nLink: {news['link']}\nDescription: {news['description']}")
             mail_connection.send_message(email)
+
+            # send via whatsapp
+            account_sid = os.environ.get('account_sid')
+            auth_token = os.environ.get('auth_token')
+            client = Client(account_sid, auth_token)
+
+            message = client.messages.create(
+                from_=os.environ.get('from_whatsapp_num'),
+                body=f"{news['title']}\n\n{news['description']}\n\n{news['link']}",
+                to=os.environ.get('to_whatsapp_num')
+            )
+
+            print(message.sid)
